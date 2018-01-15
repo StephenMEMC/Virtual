@@ -12,9 +12,11 @@
  *  on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License
  *  for the specific language governing permissions and limitations under the License.
  *
+ *	Icons by http://www.icons8.com	
+ *
  */
  
-def version() {return "0.1.20171105"}
+def version() {return "0.1.20171106"}
 
 definition(
     name: "Virtual Container Generator",
@@ -22,9 +24,9 @@ definition(
     author: "Stephan Hackett",
     description: "Creates a container for virtual device types. Prevents clutter and easy management.",
     category: "My Apps",
-    iconUrl: "https://cdn.rawgit.com/stephack/SPC/master/resources/images/spc.png",
-    iconX2Url: "https://cdn.rawgit.com/stephack/SPC/master/resources/images/spc.png",
-    iconX3Url: "https://cdn.rawgit.com/stephack/SPC/master/resources/images/spc.png") 
+    iconUrl: "https://cdn.rawgit.com/stephack/Virtual/master/resources/images/vcg.png",
+    iconX2Url: "https://cdn.rawgit.com/stephack/Virtual/master/resources/images/vcg.png",
+    iconX3Url: "https://cdn.rawgit.com/stephack/Virtual/master/resources/images/vcg.png") 
 
 
 preferences {
@@ -52,7 +54,7 @@ def parentPage() {
        		href (name: "aboutPage", 
        		title: "Virtual Container Generator\nver "+version(), 
        		description: "Tap for User's Guide and Info.",
-       		image: "https://cdn.rawgit.com/stephack/SPC/master/resources/images/spc.png",
+       		image: "https://cdn.rawgit.com/stephack/Virtual/master/resources/images/vcg.png",
        		required: false,
        		page: "aboutPage"
  	   		)
@@ -71,11 +73,11 @@ def mainPage(){
         }
         else if(vbTotal){
         	section(""){
-            	def pic = "${vType.toLowerCase()}"+"off"
-                paragraph image: "https://cdn.rawgit.com/stephack/SPC/master/resources/images/${pic}.png",
-                  title: "Virtual $vType Container",
+            	def pic = "${vType.toLowerCase()}"-" "+"on"
+                paragraph image: "https://cdn.rawgit.com/stephack/Virtual/master/resources/images/${pic}a.png",
+                  title: "$vType Container",
                   required: true,
-                  "The Container Type Cannot Be Converted!"
+                  "Container Type Cannot Be Changed!"
             }
         }
         
@@ -165,6 +167,7 @@ def createContainer() {
     	childDevice = addChildDevice("stephack", "Virtual Container", "VC_${app.id}", null,[completedSetup: true,
         label: app.label]) 
         log.info "Created Container [${childDevice}]"
+        childDevice.sendEvent(name:"level", value: "1")
         for(i in 1..6){childDevice.sendEvent(name:"vlabel${i}", value:"--")}	///sets defaults for attributes...needed for inconsistent IOS tile display
 	}
     else {
@@ -199,8 +202,8 @@ def aboutPage() {
      	section("User's Guide: Virtual Container Generator") {
         	paragraph "This smartApp allows you to creates containers for virtual device types. It Helps to prevent clutter and make management of multiple virtual devices easier."
         }        
-		section("Best Practices:"){
-        	paragraph "Text"
+		section("Other Stuff:About"){
+            paragraph "Icons by Icons8 - http://www.icons8.com"
  		}
 	}
 }
