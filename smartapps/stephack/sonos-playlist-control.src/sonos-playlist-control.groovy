@@ -15,9 +15,12 @@
  *	 
  * Speacial Thanks to @GuyInATie for allowing me to use snippets from his Sonos Remote Control smartApp. They were used
  * as the foundation of the code for retrieving and storing the recently played station from the Sonos speakers.
+ *
+ *	Icons by http://www.icons8.com	
+ *
  */
 
-def version() {return "0.1.20171102"}
+def version() {return "0.1.20171106"}
 
 definition(
     name: "Sonos PlayList Control",
@@ -26,9 +29,9 @@ definition(
     description: "Autoplay Stations/Playlists on Sonos speakers",
     category: "My Apps",
     //parent: "stephack:Sonos PlayList Control",
-    iconUrl: "https://cdn.rawgit.com/stephack/SPC/master/resources/images/spc.png",
-    iconX2Url: "https://cdn.rawgit.com/stephack/SPC/master/resources/images/spc.png",
-    iconX3Url: "https://cdn.rawgit.com/stephack/SPC/master/resources/images/spc.png"
+    iconUrl: "https://cdn.rawgit.com/stephack/Virtual/master/resources/images/spca.png",
+    iconX2Url: "https://cdn.rawgit.com/stephack/Virtual/master/resources/images/spca.png",
+    iconX3Url: "https://cdn.rawgit.com/stephack/SPC/Virtual/resources/images/spca.png"
 )
 
 preferences {
@@ -57,7 +60,7 @@ def parentPage() {
        		href (name: "aboutPage", 
        		title: "Sonos PlayList Control\nver "+version(), 
        		description: "Tap for User's Guide and Info.",
-       		image: "https://cdn.rawgit.com/stephack/SPC/master/resources/images/spc.png",
+       		image: "https://cdn.rawgit.com/stephack/Virtual/master/resources/images/spca.png",
        		required: false,
        		page: "aboutPage"
  	   		)
@@ -70,12 +73,12 @@ private def appName() { return "${parent ? "VC Config" : "Sonos PlayList Control
 def mainPage(){
 	dynamicPage(name:"mainPage",uninstall:true){
     	section("Speaker to control with Virtual Playlists") {
-        	input "sonos", "capability.musicPlayer", title: "Choose Speaker", submitOnChange: true, multiple:false, required: true, image: "https://cdn.rawgit.com/stephack/sonosVC/master/resources/images/sp.png"            
+        	input "sonos", "capability.musicPlayer", title: "Choose Speaker", submitOnChange: true, multiple:false, required: true, image: "https://cdn.rawgit.com/stephack/Virtual/master/resources/images/speakera.png"            
         }
         
         if(sonos){
         	section{
-            	input "vbTotal", "number", title: "# of Presets to create", description:"Enter number: (1-6)", multiple: false, submitOnChange: true, required: true, image: "https://cdn.rawgit.com/stephack/SPC/master/resources/images/spc6cog.png", range: "1..6"
+            	input "vbTotal", "number", title: "# of Presets to create", description:"Enter number: (1-6)", multiple: false, submitOnChange: true, required: true, image: "https://cdn.rawgit.com/stephack/Virtual/master/resources/images/spca.png", range: "1..6"
         	}        
         	if(vbTotal && vbTotal>=1 && vbTotal<=6){
         		for(i in 1..vbTotal) {
@@ -166,6 +169,7 @@ def createContainer() {
     	childDevice = addChildDevice("stephack", "Virtual Container", "VC_${app.id}", null,[completedSetup: true,
         label: app.label]) 
         log.info "Created Container [${childDevice}]"
+        childDevice.sendEvent(name:"level", value: "1")
         for(i in 1..6){childDevice.sendEvent(name:"vlabel${i}", value:"--")}	///sets defaults for attributes...needed for inconsistent IOS tile display
 	}
     else {
