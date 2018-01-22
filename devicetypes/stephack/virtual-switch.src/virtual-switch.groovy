@@ -12,7 +12,7 @@
  *  on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License
  *  for the specific language governing permissions and limitations under the License.
  *
- *	
+ *	Icons by http://www.icons8.com	
  */
 
 metadata {
@@ -22,14 +22,14 @@ metadata {
 	capability "Sensor"
 	capability "Actuator"
     capability "Momentary"
-    
+    attribute "conLabel", "string"	//stores container name for access by other smartApps
     attribute "buttonNo", "number"	//keeps track of what number this switch is in the container
 	}
 
 	tiles(scale: 2) {
     	standardTile("switch", "switch", decoration: "flat", width: 5, height: 1) {
-			state "off", label: "Off", action: on, icon: "https://cdn.rawgit.com/stephack/SPC/master/resources/images/switchoff.png"
-			state "on",  label: "On", action: off, icon: "https://cdn.rawgit.com/stephack/SPC/master/resources/images/switchon.png"//backgroundColor: "#00A0DC"
+			state "off", label: "", action: on, icon: "https://cdn.rawgit.com/stephack/Virtual/master/resources/images/switchoffb.png"
+			state "on",  label: "", action: off, icon: "https://cdn.rawgit.com/stephack/Virtual/master/resources/images/switchonb.png"//backgroundColor: "#00A0DC"
         }
     	valueTile("buttonNo", "buttonNo", decoration: "flat", width: 5, height: 1) {
 			state "buttonNo", label:'${currentValue}', action: on
@@ -61,3 +61,5 @@ def setLevel(val){
     parent.childLevel(val, whichChild)
     sendEvent(name:"level",value:val)
 }
+
+

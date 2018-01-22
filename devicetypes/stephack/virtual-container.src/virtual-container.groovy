@@ -12,6 +12,7 @@
  *  on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License
  *  for the specific language governing permissions and limitations under the License.
  *
+ *	Icons by http://www.icons8.com	
  *	
  */
 
@@ -37,17 +38,17 @@ metadata {
             tileList << "vlabel${i}".toString()
         	tileList << "vs${i}".toString()
             standardTile("vIcon${i}","vlabel${i}",height: 1, width: 2){
-        		state "vIcon", label: "", icon: "https://cdn.rawgit.com/stephack/SPC/master/resources/images/b${i}.png"
-        		state "--", label: "", icon: "https://cdn.rawgit.com/stephack/SPC/master/resources/images/x${i}.png"
+        		state "vIcon", label: "", icon: "https://cdn.rawgit.com/stephack/Virtual/master/resources/images/${i}a.png"
+        		state "--", label: "", icon: "https://cdn.rawgit.com/stephack/Virtual/master/resources/images/notset.png"
         	}
         	valueTile("vlabel${i}","vlabel${i}",height: 1, width: 3){
-                state "${i}", label: '${currentValue}'//, icon: "https://cdn.rawgit.com/stephack/SPC/master/resources/images/b${i}.png"
-        		state "Not Set", label: "--"//, icon: "https://cdn.rawgit.com/stephack/SPC/master/resources/images/x${i}.png"
+                state "${i}", label: '${currentValue}'//, icon: "https://cdn.rawgit.com/stephack/Virtual/master/resources/images/b${i}.png"
+        		state "--", label: "--"//, icon: "https://cdn.rawgit.com/stephack/Virtual/master/resources/images/notset.png"
         	}
         	childDeviceTile("vs${i}", "VS-${i}", height: 1, width: 1)
         }
         valueTile("noVS","noVS"){		//for display on main things page
-        	state "default", label: '${currentValue}', icon: "https://cdn.rawgit.com/stephack/SPC/master/resources/images/spc.png"
+        	state "default", label: '${currentValue}', icon: "https://cdn.rawgit.com/stephack/Virtual/master/resources/images/container5.png"
         }
        // childDeviceTiles("all", height: 1, width: 2)
         
@@ -121,6 +122,7 @@ def createChildVB(newTotal,vDetails, vType) {			//creates child Momentary switch
             label: "${vName}", name: "${vName}", isComponent: true, componentName: "VS-${i}", componentLabel: "Virtual Switch ${i}"])
             childDevice.sendEvent(name: "buttonNo", value: i)
             childDevice.sendEvent(name:"switch", value: "off")
+            childDevice.sendEvent(name:"conLabel", value: device.label)
             sendEvent(name:"vlabel${i}", value: vName)
 		}
         else {
@@ -148,6 +150,10 @@ def deleteChildVB(which) {		//deletes specified child Momentary...or All childre
 
 def updated(){
 	parent.updateLabel(device.label)
+    def childDevice = getChildDevices()
+    childDevice.each {child->
+  		child.sendEvent(name:"conLabel", value: device.label)          
+    }
 }
 
 
@@ -201,6 +207,7 @@ def createContainer() {
     	childDevice = addChildDevice("stephack", "Virtual Container", "VC_${app.id}", null,[completedSetup: true,
         label: app.label]) 
         log.info "Created Container [${childDevice}]"
+        childDevice.sendEvent(name:"level", value: "1")
         for(i in 1..6){childDevice.sendEvent(name:"vlabel${i}", value:"--")}	///sets defaults for attributes...needed for inconsistent IOS tile display
 	}
     else {

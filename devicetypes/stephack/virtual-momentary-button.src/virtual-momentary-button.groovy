@@ -12,6 +12,7 @@
  *  on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License
  *  for the specific language governing permissions and limitations under the License.
  *
+ *	Icons by http://www.icons8.com	
  *	
  */
 
@@ -21,17 +22,17 @@ metadata {
 	capability "Sensor"
 	capability "Actuator"
     capability "Momentary"
-    
+    attribute "conLabel", "string"	//stores container name for access by other smartApps
     attribute "buttonNo", "number"	//keeps track of what number this switch is in the container
 
 	}
 
 	tiles(scale: 2) {
-    	standardTile("switch", "switch", width: 5, height: 1) {
-			state "off", label:'Push', action: on, icon: "https://cdn.rawgit.com/stephack/SPC/master/resources/images/momentary buttonoff.png", nextState: "turningOn"
-			state "turningOn", label:'Push', action: on, icon: "https://cdn.rawgit.com/stephack/SPC/master/resources/images/momentary buttonon.png", nextState: "on"
+    	standardTile("switch", "switch", width: 5, height: 1, decoration: "flat") {
+			state "off", label:'', action: on, icon: "https://cdn.rawgit.com/stephack/Virtual/master/resources/images/momentarybuttonoffb.png", nextState: "turningOn"
+			state "turningOn", label:'', action: on, icon: "https://cdn.rawgit.com/stephack/Virtual/master/resources/images/momentarybuttononb.png", nextState: "on"
         }
-    	valueTile("buttonNo", "buttonNo", decoration: "flat", width: 5, height: 1) {
+    	standardTile("buttonNo", "buttonNo", decoration: "flat", width: 5, height: 1) {
 			state "buttonNo", label:'${currentValue}', action: on
         }
 		main "switch"
