@@ -20,9 +20,9 @@ definition(
     author: "Stephan Hackett",
     description: "Wake On Lan (WOL) functionality",
     category: "My Apps",
-    iconUrl: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience.png",
-    iconX2Url: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience@2x.png",
-    iconX3Url: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience@2x.png")
+    iconUrl: "https://raw.githubusercontent.com/stephack/Virtual/master/resources/images/power.png",
+    iconX2Url: "https://raw.githubusercontent.com/stephack/Virtual/master/resources/images/power.png",
+    iconX3Url: "https://raw.githubusercontent.com/stephack/Virtual/master/resources/images/power.png")
 
 preferences {
     section("Choose Device to Activate WOL") {
@@ -43,24 +43,13 @@ def updated() {
 }
 
 def initialize() {
-	subscribe(myDevice, "on", bootMeUp)
+	subscribe(myDevice, "on", myWOLCommand)
 }
 
-
-def bootMeUp(evt) {
-	log.info "Level 1"
-	myWOLCommand()  
-}
-    
-    
-    
-def myWOLCommand() {
-    def newMac = myMac.replaceAll(":","").replaceAll("-","")
-    log.info newMac
-    def result = new physicalgraph.device.HubAction (
+def myWOLCommand(evt) {
+	def newMac = myMac.replaceAll(":","").replaceAll("-","")
+    sendHubCommand(new physicalgraph.device.HubAction (
         "wake on lan ${newMac}",
         physicalgraph.device.Protocol.LAN,
-        null,
-    )
-    return result
+        null))
 }
