@@ -34,6 +34,8 @@ def chooseVirt() {
 		section("Step 1: Select Your Hubitat Virtual Device") {
 			input "myVirt", "capability.switchLevel", title: "Hubitat Virtual Device", multiple: false, required: true, submitOnChange: true
 			input "mySonos", "capability.musicPlayer", title: "Sonos Device", multiple: false, required: true, submitOnChange: true
+			input "volAdj", "number", title: "+- volume by this value", multiple: false, required: true, submitOnChange: true
+			//input "myPreset", "device.VirtualContainer", title: "Preset Container", multiple: false, required: true, submitOnChange: true
 		}
     }
 }        
@@ -54,47 +56,47 @@ def updated() {
 }
 
 def initialize() {
-	// TODO: subscribe to attributes, devices, locations, etc.
     subscribe(myVirt, "level", myHandler)
 }
 
-// TODO: implement event handlers
-
-
 def myHandler(evt){
-	log.debug evt.value
+	//log.debug evt.value
     def myLevel = evt.value.toInteger()
-    //if(evt.name == "level"){
-    	if(myLevel < 10){
-        	log.debug "1's Event"
+	switch(myLevel){
+		case 11:
+        	log.debug "Pushed 1 event Received"
             myVirt.setLevel(100)
             mySonos.currentValue('status').contains('playing')? mySonos.pause() : mySonos.play()
-        }
-        if(myLevel >= 10 && myLevel < 20){
-        	log.debug "10's Event"
-            myVirt.setLevel(100)
-            mySonos.nextTrack()
-        }
-    	if(myLevel >= 20 && myLevel < 30){
-        	log.debug "20's Event"
-            myVirt.setLevel(100)
-            def currentVol = mySonos.currentValue('level')	//currentlevel return a list...[0] is first item in list ie volume level
-    		def newVol = currentVol + 5
-  			mySonos.setLevel(newVol)
-        }
-        if(myLevel >= 30 && myLevel < 40){
-        	log.debug "30's Event"
+        break
+        case 21:
+        	log.debug "Pushed 2 event Received"
             myVirt.setLevel(100)
             def currentVol = mySonos.currentValue('level')
-    		def newVol = currentVol.toInteger() - 5
+    		def newVol = currentVol + volAdj
   			mySonos.setLevel(newVol)
-        }
-        if(myLevel >= 40 && myLevel < 50){
-        	log.debug "40's Event"
+        break
+        case 31:
+        	log.debug "Pushed 3 event Received"
             myVirt.setLevel(100)
-            
-        }
-    
-   // }
-    
+            //myPreset.cycleChild()
+        break
+        case 41:
+        	log.debug "Pushed 4 event Received"
+            myVirt.setLevel(100)
+            def currentVol = mySonos.currentValue('level')
+    		def newVol = currentVol - volAdj
+  			mySonos.setLevel(newVol)
+       	break
+        case 51:
+        	log.debug "Pushed 5 event Received"
+            myVirt.setLevel(100)
+            mySonos.nextTrack()
+        break
+        case 100:
+        	log.debug "Value reset"
+        break
+        default: 
+        	log.debug "No HubiThings command associated with that value."
+        break
+    }
 }
